@@ -70,4 +70,3 @@ class EasyChat<Response> extends StatelessWidget {
     );
   }
 }
-

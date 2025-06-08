@@ -1,11 +1,11 @@
 class ChatMessages{
-  final String image;
+  final String senderImage;
   final String message;
   final String time;
   final bool  isFromMe;
 
   ChatMessages({
-    required this.image,
+    required this.senderImage,
     required this.message,
     required this.time,
     required this.isFromMe

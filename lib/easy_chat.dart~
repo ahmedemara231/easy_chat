@@ -10,6 +10,7 @@ class EasyChat<Response> extends StatelessWidget {
   final Future<Response> Function(int currentPage) asyncCall;
   final DataListAndPaginationData<ChatMessages> Function(Response response) mapper;
   final ErrorMapper errorMapper;
+  final Widget? chatBackground;
   final Widget? loadingBuilder;
   final Widget Function(String)? errorBuilder;
   final Widget Function(ChatMessages message) rightMessageBuilder;
@@ -27,6 +28,7 @@ class EasyChat<Response> extends StatelessWidget {
     required this.errorMapper,
     required this.rightMessageBuilder,
     required this.leftMessageBuilder,
+    this.chatBackground,
     this.errorBuilder,
     this.loadingBuilder,
     this.onMessageTap,
@@ -44,8 +46,8 @@ class EasyChat<Response> extends StatelessWidget {
           Expanded(
             child: Stack(
               children: [
-                if(background != null)
-                  background!,
+                if(chatBackground != null)
+                  chatBackground!,
                 ChatBody<Response>(
                   errorMapper: errorMapper,
                   mapper: mapper,
@@ -68,4 +70,3 @@ class EasyChat<Response> extends StatelessWidget {
     );
   }
 }
-
