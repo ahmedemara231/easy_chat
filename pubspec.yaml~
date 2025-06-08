@@ -10,7 +10,7 @@ environment:
 dependencies:
   easy_pagination:
     git: https://github.com/ahmedemara231/pagination_helper
-    
+
   flutter:
     sdk: flutter
 

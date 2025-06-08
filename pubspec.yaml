@@ -1,7 +1,7 @@
 name: easy_chat
 description: "chat generator helper with built in reverse pagination"
 version: 0.0.1
-homepage:
+homepage: https://github.com/ahmedemara231/easy_chat
 
 environment:
   sdk: ^3.7.2
