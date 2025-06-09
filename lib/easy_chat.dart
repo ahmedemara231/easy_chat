@@ -12,7 +12,7 @@ class EasyChat<Response> extends StatelessWidget {
   final ErrorMapper errorMapper;
   final Widget? chatBackground;
   final Widget? loadingBuilder;
-  final Widget Function(String)? errorBuilder;
+  final Widget Function(String error)? errorBuilder;
   final Widget Function(ChatMessages message) rightMessageBuilder;
   final Widget Function(ChatMessages message) leftMessageBuilder;
   final void Function(BuildContext context, ChatMessages message)? onMessageTap;
