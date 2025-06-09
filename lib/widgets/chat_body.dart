@@ -12,9 +12,9 @@ class ChatBody<Response> extends StatelessWidget {
   final Widget Function(String)? errorBuilder;
   final Widget Function(ChatMessages message) rightMessageBuilder;
   final Widget Function(ChatMessages message) leftMessageBuilder;
-  final Function(ChatMessages message)? onMessageTap;
-  final void Function()? onMessageLongPress;
-  final void Function()? onMessageDoublePress;
+  final void Function(BuildContext context, ChatMessages message)? onMessageTap;
+  final void Function(BuildContext context, ChatMessages message)? onMessageLongPress;
+  final void Function(BuildContext context, ChatMessages message)? onMessageDoublePress;
 
   const ChatBody({super.key,
     required this.controller,
@@ -45,10 +45,10 @@ class ChatBody<Response> extends StatelessWidget {
         alignment: element.isFromMe?
         Alignment.topRight : Alignment.topLeft,
         child: InkWell(
-          onTap: () => onMessageTap != null?
-          onMessageTap!(element) : null,
-          onLongPress: onMessageLongPress,
-          onDoubleTap: onMessageDoublePress,
+          onTap: onMessageTap != null? () =>
+          onMessageTap!(context, element) : null,
+          onLongPress: onMessageLongPress != null? () => onMessageLongPress!(context, element) : null,
+          onDoubleTap: onMessageDoublePress != null? () => onMessageDoublePress!(context, element) : null,
           child: MessageWidget(
             message: element,
             leftMessageBuilder: leftMessageBuilder,

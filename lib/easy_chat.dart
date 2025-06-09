@@ -15,9 +15,9 @@ class EasyChat<Response> extends StatelessWidget {
   final Widget Function(String)? errorBuilder;
   final Widget Function(ChatMessages message) rightMessageBuilder;
   final Widget Function(ChatMessages message) leftMessageBuilder;
-  final Function(ChatMessages message)? onMessageTap;
-  final void Function()? onMessageLongPress;
-  final void Function()? onMessageDoublePress;
+  final void Function(BuildContext context, ChatMessages message)? onMessageTap;
+  final void Function(BuildContext context, ChatMessages message)? onMessageLongPress;
+  final void Function(BuildContext context, ChatMessages message)? onMessageDoublePress;
 
   const EasyChat({super.key,
     required this.appBar,
