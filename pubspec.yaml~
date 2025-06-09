@@ -8,7 +8,6 @@ environment:
   flutter: ">=1.17.0"
 
 dependencies:
-  web_socket_channel: ^3.0.3
   easy_pagination:
     git: https://github.com/ahmedemara231/pagination_helper
 

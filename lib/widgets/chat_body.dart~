@@ -40,14 +40,10 @@ class ChatBody<Response> extends StatefulWidget {
 
 class _ChatBodyState<Response> extends State<ChatBody<Response>> {
 
-  late final WebSocketChannel _channel;
-  void _init(){
-    final wsUrl = Uri.parse(widget.socketData.connectionUrl);
-    _channel = WebSocketChannel.connect(wsUrl);
-  }
+  late final WebSocketChannel channel;
 
   void _handleSocket(BuildContext context){
-    _channel.stream.listen(
+    channel.stream.listen(
           (event) => widget.socketData.onReceiveMessage(
               context,
               widget.controller,
@@ -58,7 +54,8 @@ class _ChatBodyState<Response> extends State<ChatBody<Response>> {
 
   @override
   void initState() {
-    _init();
+    final wsUrl = Uri.parse(widget.socketData.connectionUrl);
+    channel = WebSocketChannel.connect(wsUrl);
     _handleSocket(context);
     super.initState();
   }

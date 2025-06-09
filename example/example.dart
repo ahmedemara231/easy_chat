@@ -1,5 +1,6 @@
 import 'package:easy_chat/easy_chat.dart';
 import 'package:easy_chat/models/chat_message.dart';
+import 'package:easy_chat/models/socket_data.dart';
 import 'package:easy_pagination/pagination_with_reverse_and_status_stream.dart';
 import 'package:flutter/material.dart';
 
@@ -57,12 +58,23 @@ class Example extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: EasyChat(
-          appBar: AppBar(),
-          bottomBar: TextField(
+        socketData: SocketData(
+          connectionUrl: 'connectionUrl',
+          jsonToChatMessage: (jsonMessage) => ChatMessages(
+              senderImage: jsonMessage['senderImage'],
+              message: jsonMessage['message'],
+              time: jsonMessage['time'],
+              isFromMe: jsonMessage['isFromMe']
+          ),
+          onReceiveMessage: (context, controller, message) =>
+              controller.addItem(message),
+        ),
+        appBar: AppBar(),
+        bottomBar: TextField(
             decoration: InputDecoration(
               suffixIcon: IconButton(onPressed: (){
                 // send any chat message,
-                _chatController.addItem(ChatMessages(senderImage: 'senderImage', message: 'message', time: 'time', isFromMe: true));
+
                 // move to max bottom like any chat
                 _chatController.moveToMaxBottom();
               }, icon: Icon(Icons.send)),
