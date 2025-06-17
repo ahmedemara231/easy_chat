@@ -58,19 +58,16 @@ class Example extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: EasyChat(
-        socketType: SignalRImpl('server url'),
+        socketType: SignalRImpl(
+          url: 'server url',
+          jsonToChatMessage: (jsonMessage) => ChatMessages(
+              senderImage: jsonMessage['senderImage'],
+              message: jsonMessage['message'],
+              time: jsonMessage['time'],
+              isFromMe: jsonMessage['isFromMe']
+          ),
+        ),
         onReceiveMessage: (context, message) {},
-        // socketData: SocketData(
-        //   connectionUrl: 'connectionUrl',
-        //   jsonToChatMessage: (jsonMessage) => ChatMessages(
-        //       senderImage: jsonMessage['senderImage'],
-        //       message: jsonMessage['message'],
-        //       time: jsonMessage['time'],
-        //       isFromMe: jsonMessage['isFromMe']
-        //   ),
-        //   onReceiveMessage: (context, controller, message) =>
-        //       controller.addItem(message),
-        // ),
         appBar: AppBar(),
         bottomBar: TextField(
             decoration: InputDecoration(

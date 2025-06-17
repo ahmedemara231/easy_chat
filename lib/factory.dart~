@@ -13,6 +13,22 @@ abstract interface class SocketHelper{
   Stream<ChatMessages> onReceiveMessage(); // should make json parsing here to chat message
 }
 
+// late final WebSocketChannel _channel;
+// void _init(){
+//   final wsUrl = Uri.parse(widget.socketData.connectionUrl);
+//   _channel = WebSocketChannel.connect(wsUrl);
+// }
+//
+// void _handleSocket(BuildContext context){
+//   _channel.stream.listen(
+//         (event) => widget.socketData.onReceiveMessage(
+//             context,
+//             widget.controller,
+//             widget.socketData.jsonToChatMessage(event)
+//         )
+//   );
+// }
+
 class PusherImpl extends SocketHelper{
   PusherImpl({required super.url, required super.jsonToChatMessage});
   @override
