@@ -2,27 +2,13 @@ import 'dart:async';
 
 import 'package:easy_chat/models/chat_message.dart';
 
-// enum SocketType {pusher, signalR, clientIO}
-//
-// class SocketFactory{
-//   static SocketHelper getSocket(SocketType socketType){
-//     switch(socketType){
-//       case SocketType.pusher:
-//         return PusherImpl();
-//       case SocketType.signalR:
-//         return SignalRImpl();
-//       case SocketType.clientIO:
-//         return ClientIOImpl();
-//     }
-//   }
-// }
-
 abstract interface class SocketHelper{
   final String url;
   SocketHelper(this.url);
 
   FutureOr<void> connect();
   FutureOr<void> disconnect();
+  // ChatMessages jsonToChatMessage(Map<String, dynamic> jsonMessage) => ChatMessages.initial();
   Stream<ChatMessages> onReceiveMessage(); // should make json parsing here to chat message
 }
 
