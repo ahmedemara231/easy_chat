@@ -1,11 +1,13 @@
-import 'package:easy_chat/models/socket_data.dart';
+import 'dart:async';
 import 'package:easy_pagination/pagination_with_reverse_and_status_stream.dart';
 import 'package:flutter/material.dart';
+import 'factory.dart';
 import 'widgets/chat_body.dart';
 import 'models/chat_message.dart';
 
 class EasyChat<Response> extends StatelessWidget {
-  final SocketData socketData;
+  final SocketHelper socketType;
+  final FutureOr Function(BuildContext context, ChatMessages message) onReceiveMessage;
   final PreferredSizeWidget appBar;
   final Widget bottomBar;
   final EasyPaginationController<ChatMessages> controller;
@@ -22,7 +24,8 @@ class EasyChat<Response> extends StatelessWidget {
   final void Function(BuildContext context, ChatMessages message)? onMessageDoublePress;
 
   const EasyChat({super.key,
-    required this.socketData,
+    required this.socketType,
+    required this.onReceiveMessage,
     required this.appBar,
     required this.bottomBar,
     required this.controller,
@@ -52,7 +55,8 @@ class EasyChat<Response> extends StatelessWidget {
                 if(chatBackground != null)
                   chatBackground!,
                 ChatBody<Response>(
-                  socketData: socketData,
+                  socketType: socketType,
+                  onReceiveMessage: onReceiveMessage,
                   errorMapper: errorMapper,
                   mapper: mapper,
                   asyncCall: asyncCall,

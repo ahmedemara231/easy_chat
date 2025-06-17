@@ -1,6 +1,6 @@
 import 'package:easy_chat/easy_chat.dart';
+import 'package:easy_chat/factory.dart';
 import 'package:easy_chat/models/chat_message.dart';
-import 'package:easy_chat/models/socket_data.dart';
 import 'package:easy_pagination/pagination_with_reverse_and_status_stream.dart';
 import 'package:flutter/material.dart';
 
@@ -58,17 +58,19 @@ class Example extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: EasyChat(
-        socketData: SocketData(
-          connectionUrl: 'connectionUrl',
-          jsonToChatMessage: (jsonMessage) => ChatMessages(
-              senderImage: jsonMessage['senderImage'],
-              message: jsonMessage['message'],
-              time: jsonMessage['time'],
-              isFromMe: jsonMessage['isFromMe']
-          ),
-          onReceiveMessage: (context, controller, message) =>
-              controller.addItem(message),
-        ),
+        socketType: SignalRImpl('server url'),
+        onReceiveMessage: (context, message) {},
+        // socketData: SocketData(
+        //   connectionUrl: 'connectionUrl',
+        //   jsonToChatMessage: (jsonMessage) => ChatMessages(
+        //       senderImage: jsonMessage['senderImage'],
+        //       message: jsonMessage['message'],
+        //       time: jsonMessage['time'],
+        //       isFromMe: jsonMessage['isFromMe']
+        //   ),
+        //   onReceiveMessage: (context, controller, message) =>
+        //       controller.addItem(message),
+        // ),
         appBar: AppBar(),
         bottomBar: TextField(
             decoration: InputDecoration(

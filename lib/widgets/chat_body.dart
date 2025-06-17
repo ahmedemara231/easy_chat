@@ -1,12 +1,13 @@
+import 'dart:async';
+import 'package:easy_chat/factory.dart';
 import 'package:easy_pagination/pagination_with_reverse_and_status_stream.dart';
 import 'package:flutter/material.dart';
-import 'package:web_socket_channel/web_socket_channel.dart';
 import '../models/chat_message.dart';
-import '../models/socket_data.dart';
 import 'message_widget.dart';
 
 class ChatBody<Response> extends StatefulWidget {
-  final SocketData socketData;
+  final SocketHelper socketType;
+  final FutureOr Function(BuildContext context, ChatMessages message) onReceiveMessage;
   final EasyPaginationController<ChatMessages> controller;
   final Future<Response> Function(int currentPage) asyncCall;
   final DataListAndPaginationData<ChatMessages> Function(Response response) mapper;
@@ -20,7 +21,8 @@ class ChatBody<Response> extends StatefulWidget {
   final void Function(BuildContext context, ChatMessages message)? onMessageDoublePress;
 
   const ChatBody({super.key,
-    required this.socketData,
+    required this.socketType,
+    required this.onReceiveMessage,
     required this.controller,
     required this.asyncCall,
     required this.mapper,
@@ -40,29 +42,24 @@ class ChatBody<Response> extends StatefulWidget {
 
 class _ChatBodyState<Response> extends State<ChatBody<Response>> {
 
-  late final WebSocketChannel _channel;
-  void _init(){
-    final wsUrl = Uri.parse(widget.socketData.connectionUrl);
-    _channel = WebSocketChannel.connect(wsUrl);
-  }
-
-  void _handleSocket(BuildContext context){
-    _channel.stream.listen(
-          (event) => widget.socketData.onReceiveMessage(
-              context,
-              widget.controller,
-              widget.socketData.jsonToChatMessage(event)
-          )
+  Future<void> _init() async {
+    await widget.socketType.connect();
+    widget.socketType.onReceiveMessage().listen(
+            (event) => widget.onReceiveMessage(context, event)
     );
   }
 
   @override
   void initState() {
     _init();
-    _handleSocket(context);
     super.initState();
   }
 
+  @override
+  void dispose() {
+    widget.socketType.disconnect();
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
     return EasyPagination<Response, ChatMessages>.listView(
