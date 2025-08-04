@@ -9,7 +9,6 @@ abstract interface class SocketHelper{
 
   FutureOr<void> connect();
   FutureOr<void> disconnect();
-  // ChatMessages jsonToChatMessage(Map<String, dynamic> jsonMessage) => ChatMessages.initial();
   Stream<ChatMessages> onReceiveMessage(); // should make json parsing here to chat message
 }
 
