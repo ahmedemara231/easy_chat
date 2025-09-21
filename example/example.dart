@@ -1,10 +1,10 @@
 import 'package:easy_chat/easy_chat.dart';
 import 'package:easy_chat/factory.dart';
 import 'package:easy_chat/models/chat_message.dart';
-import 'package:easy_pagination/helpers/controller.dart';
-import 'package:easy_pagination/helpers/data_and_pagination_data.dart';
-import 'package:easy_pagination/helpers/errors.dart';
 import 'package:flutter/material.dart';
+import 'package:pagify/helpers/data_and_pagination_data.dart';
+import 'package:pagify/helpers/errors.dart';
+import 'package:pagify/pagify.dart';
 
 void main() {
   runApp(EasyChatExample());
@@ -24,7 +24,7 @@ class EasyChatExample extends StatelessWidget {
 class Example extends StatelessWidget {
   Example({super.key});
 
-  final EasyPaginationController<ChatMessages> _chatController = EasyPaginationController();
+  final PagifyController<ChatMessages> _chatController = PagifyController();
   Future<List<ChatMessages>> testFun(int currentPage)async {
     List<ChatMessages> msgs = [];
     await Future.delayed(const Duration(seconds: 2));
@@ -82,14 +82,14 @@ class Example extends StatelessWidget {
             ),
           ),
           controller: _chatController,
-          asyncCall: (currentPage) async => await testFun(currentPage),
-          mapper: (response) => DataListAndPaginationData(
+          asyncCall: (context, page) async => await testFun(page),
+          mapper: (response) => PagifyData(
               data: response,
               paginationData: PaginationData(
                   perPage: 10, totalPages: 3
               )
           ),
-          errorMapper: ErrorMapper(errorWhenDio: (e) => e.response?.data['error']),
+          errorMapper: PagifyErrorMapper(errorWhenDio: (e) => e.response?.data['error']),
           rightMessageBuilder: _buildMessage,
           leftMessageBuilder: _buildMessage,
       ),
