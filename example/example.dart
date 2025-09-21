@@ -38,7 +38,7 @@ class Example extends StatelessWidget {
     ]);
     return msgs;
   }
-  
+   //
   Widget _buildMessage(ChatMessages chatMessage) {
     if(chatMessage.message.contains('png')){
       return Image.network(chatMessage.message);
