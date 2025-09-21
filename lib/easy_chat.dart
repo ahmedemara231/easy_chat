@@ -57,6 +57,7 @@ class EasyChat<Response> extends StatelessWidget {
                 if(chatBackground != null)
                   chatBackground!,
                 ChatBody<Response>(
+
                   socketType: socketType,
                   onReceiveMessage: onReceiveMessage,
                   errorMapper: errorMapper,

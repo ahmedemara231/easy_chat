@@ -21,8 +21,9 @@ class ChatBody<Response> extends StatefulWidget {
   final void Function(BuildContext context, ChatMessages message)? onMessageTap;
   final void Function(BuildContext context, ChatMessages message)? onMessageLongPress;
   final void Function(BuildContext context, ChatMessages message)? onMessageDoublePress;
+  final double? cacheExtent;
 
-  const ChatBody({super.key,
+const ChatBody({super.key,
     required this.socketType,
     required this.onReceiveMessage,
     required this.controller,
@@ -35,7 +36,8 @@ class ChatBody<Response> extends StatefulWidget {
     this.loadingBuilder,
     this.onMessageTap,
     this.onMessageLongPress,
-    this.onMessageDoublePress
+    this.onMessageDoublePress,
+    this.cacheExtent,
   });
 
   @override
@@ -47,7 +49,7 @@ class _ChatBodyState<Response> extends State<ChatBody<Response>> {
   Future<void> _init() async {
     await widget.socketType.connect();
     widget.socketType.onReceiveMessage().listen(
-            (event) => widget.onReceiveMessage(context, event)
+            (event) => widget.onReceiveMessage.call(context, event)
     );
   }
 
@@ -67,6 +69,7 @@ class _ChatBodyState<Response> extends State<ChatBody<Response>> {
     return Pagify<Response, ChatMessages>.listView(
       isReverse: true,
       shrinkWrap: true,
+      cacheExtent: widget.cacheExtent,
       loadingBuilder: widget.loadingBuilder,
       controller: widget.controller,
       asyncCall: widget.asyncCall,
