@@ -22,6 +22,7 @@ class ChatBody<Response> extends StatefulWidget {
   final void Function(BuildContext context, ChatMessages message)? onMessageLongPress;
   final void Function(BuildContext context, ChatMessages message)? onMessageDoublePress;
   final double? cacheExtent;
+  final double? itemExtent;
 
 const ChatBody({super.key,
     required this.socketType,
@@ -38,6 +39,7 @@ const ChatBody({super.key,
     this.onMessageLongPress,
     this.onMessageDoublePress,
     this.cacheExtent,
+    this.itemExtent,
   });
 
   @override
@@ -70,6 +72,7 @@ class _ChatBodyState<Response> extends State<ChatBody<Response>> {
       isReverse: true,
       shrinkWrap: true,
       cacheExtent: widget.cacheExtent,
+      itemExtent: widget.itemExtent,
       loadingBuilder: widget.loadingBuilder,
       controller: widget.controller,
       asyncCall: widget.asyncCall,

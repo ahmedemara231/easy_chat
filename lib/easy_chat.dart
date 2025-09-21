@@ -25,6 +25,7 @@ class EasyChat<Response> extends StatelessWidget {
   final void Function(BuildContext context, ChatMessages message)? onMessageLongPress;
   final void Function(BuildContext context, ChatMessages message)? onMessageDoublePress;
   final double? cacheExtent;
+  final double? itemExtent;
 
   const EasyChat({super.key,
     required this.socketType,
@@ -44,6 +45,7 @@ class EasyChat<Response> extends StatelessWidget {
     this.onMessageLongPress,
     this.onMessageDoublePress,
     this.cacheExtent,
+    this.itemExtent,
   });
 
   @override
@@ -60,6 +62,7 @@ class EasyChat<Response> extends StatelessWidget {
                   chatBackground!,
                 ChatBody<Response>(
                   cacheExtent: cacheExtent,
+                  itemExtent: itemExtent,
                   socketType: socketType,
                   onReceiveMessage: onReceiveMessage,
                   errorMapper: errorMapper,
