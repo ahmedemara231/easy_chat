@@ -9,8 +9,7 @@ environment:
 
 dependencies:
   web_socket_channel: ^3.0.3
-  easy_pagination:
-    git: https://github.com/ahmedemara231/pagination_helper
+  pagify: ^0.2.2
 
   flutter:
     sdk: flutter

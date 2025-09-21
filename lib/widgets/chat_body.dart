@@ -1,22 +1,21 @@
 import 'dart:async';
 import 'package:easy_chat/factory.dart';
-import 'package:easy_pagination/helpers/controller.dart';
-import 'package:easy_pagination/helpers/data_and_pagination_data.dart';
-import 'package:easy_pagination/helpers/errors.dart';
-import 'package:easy_pagination/pagination_with_reverse_and_status_stream.dart';
 import 'package:flutter/material.dart';
+import 'package:pagify/helpers/data_and_pagination_data.dart';
+import 'package:pagify/helpers/errors.dart';
+import 'package:pagify/pagify.dart';
 import '../models/chat_message.dart';
 import 'message_widget.dart';
 
 class ChatBody<Response> extends StatefulWidget {
   final SocketHelper socketType;
   final FutureOr Function(BuildContext context, ChatMessages message) onReceiveMessage;
-  final EasyPaginationController<ChatMessages> controller;
-  final Future<Response> Function(int currentPage) asyncCall;
-  final DataListAndPaginationData<ChatMessages> Function(Response response) mapper;
-  final ErrorMapper errorMapper;
+  final PagifyController<ChatMessages> controller;
+  final Future<Response> Function(BuildContext context, int currentPage) asyncCall;
+  final PagifyData<ChatMessages> Function(Response response) mapper;
+  final PagifyErrorMapper errorMapper;
   final Widget? loadingBuilder;
-  final Widget Function(String)? errorBuilder;
+  final Widget Function(PagifyException e)? errorBuilder;
   final Widget Function(ChatMessages message) rightMessageBuilder;
   final Widget Function(ChatMessages message) leftMessageBuilder;
   final void Function(BuildContext context, ChatMessages message)? onMessageTap;
@@ -65,7 +64,7 @@ class _ChatBodyState<Response> extends State<ChatBody<Response>> {
   }
   @override
   Widget build(BuildContext context) {
-    return EasyPagination<Response, ChatMessages>.listView(
+    return Pagify<Response, ChatMessages>.listView(
       isReverse: true,
       shrinkWrap: true,
       loadingBuilder: widget.loadingBuilder,
@@ -74,7 +73,7 @@ class _ChatBodyState<Response> extends State<ChatBody<Response>> {
       mapper: widget.mapper,
       errorMapper: widget.errorMapper,
       errorBuilder: widget.errorBuilder,
-      itemBuilder: (data, index, element) => Align(
+      itemBuilder: (context, data, index, element) => Align(
         alignment: element.isFromMe?
         Alignment.topRight : Alignment.topLeft,
         child: InkWell(
