@@ -23,8 +23,9 @@ class ChatBody<Response> extends StatefulWidget {
   final void Function(BuildContext context, ChatMessages message)? onMessageDoublePress;
   final double? cacheExtent;
   final double? itemExtent;
+  final void Function(ScrollPosition position)? onScrollPositionChanged;
 
-const ChatBody({super.key,
+  const ChatBody({super.key,
     required this.socketType,
     required this.onReceiveMessage,
     required this.controller,
@@ -40,6 +41,7 @@ const ChatBody({super.key,
     this.onMessageDoublePress,
     this.cacheExtent,
     this.itemExtent,
+    this.onScrollPositionChanged,
   });
 
   @override
@@ -69,6 +71,7 @@ class _ChatBodyState<Response> extends State<ChatBody<Response>> {
   @override
   Widget build(BuildContext context) {
     return Pagify<Response, ChatMessages>.listView(
+      onScrollPositionChanged: widget.onScrollPositionChanged,
       isReverse: true,
       shrinkWrap: true,
       cacheExtent: widget.cacheExtent,
@@ -84,7 +87,7 @@ class _ChatBodyState<Response> extends State<ChatBody<Response>> {
         Alignment.topRight : Alignment.topLeft,
         child: InkWell(
           onTap: widget.onMessageTap != null? () =>
-          widget.onMessageTap!(context, element) : null,
+              widget.onMessageTap!(context, element) : null,
           onLongPress: widget.onMessageLongPress != null? () => widget.onMessageLongPress!(context, element) : null,
           onDoubleTap: widget.onMessageDoublePress != null? () => widget.onMessageDoublePress!(context, element) : null,
           child: MessageWidget(

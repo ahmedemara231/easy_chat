@@ -23,6 +23,7 @@ class EasyChat<Response> extends StatelessWidget {
   final void Function(BuildContext context, ChatMessages message)? onMessageDoublePress;
   final double? cacheExtent;
   final double? itemExtent;
+  final void Function(ScrollPosition position)? onScrollPositionChanged;
 
   const EasyChat({super.key,
     required this.socketType,
@@ -40,11 +41,13 @@ class EasyChat<Response> extends StatelessWidget {
     this.onMessageDoublePress,
     this.cacheExtent,
     this.itemExtent,
+    this.onScrollPositionChanged,
   });
 
   @override
   Widget build(BuildContext context) {
     return ChatBody<Response>(
+      onScrollPositionChanged: onScrollPositionChanged,
       cacheExtent: cacheExtent,
       itemExtent: itemExtent,
       socketType: socketType,
