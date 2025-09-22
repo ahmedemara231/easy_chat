@@ -40,19 +40,18 @@ class SignalRImpl extends SocketHelper{
   @override
   FutureOr<void> connect() {
     // TODO: implement connect
-    throw UnimplementedError();
+    // throw UnimplementedError();
   }
 
   @override
   FutureOr<void> disconnect() {
     // TODO: implement disconnect
-    throw UnimplementedError();
+    // throw UnimplementedError();
   }
 
   @override
   Stream<ChatMessages> onReceiveMessage() {
-    // TODO: implement onReceiveMessage
-    throw UnimplementedError();
+    return Stream.periodic(Duration(seconds: 1), (count) => ChatMessages(senderImage: 'senderImage', message: 'any msg', time: 'time', isFromMe: count.isEven? true : false));
   }
 }
 
