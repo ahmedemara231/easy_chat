@@ -38,7 +38,7 @@ class Example extends StatelessWidget {
     ]);
     return msgs;
   }
-  
+   //
   Widget _buildMessage(ChatMessages chatMessage) {
     if(chatMessage.message.contains('png')){
       return Image.network(chatMessage.message);
@@ -70,17 +70,6 @@ class Example extends StatelessWidget {
           ),
         ),
         onReceiveMessage: (context, message) {},
-        appBar: AppBar(),
-        bottomBar: TextField(
-            decoration: InputDecoration(
-              suffixIcon: IconButton(onPressed: (){
-                // send any chat message,
-
-                // move to max bottom like any chat
-                _chatController.moveToMaxBottom();
-              }, icon: Icon(Icons.send)),
-            ),
-          ),
           controller: _chatController,
           asyncCall: (context, page) async => await testFun(page),
           mapper: (response) => PagifyData(
@@ -92,6 +81,16 @@ class Example extends StatelessWidget {
           errorMapper: PagifyErrorMapper(errorWhenDio: (e) => e.response?.data['error']),
           rightMessageBuilder: _buildMessage,
           leftMessageBuilder: _buildMessage,
+      ),
+      bottomNavigationBar: TextField(
+        decoration: InputDecoration(
+          suffixIcon: IconButton(onPressed: (){
+            // send any chat message,
+
+            // move to max bottom like any chat
+            _chatController.moveToMaxBottom();
+          }, icon: Icon(Icons.send)),
+        ),
       ),
     );
   }

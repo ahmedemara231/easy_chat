@@ -10,13 +10,10 @@ import 'models/chat_message.dart';
 class EasyChat<Response> extends StatelessWidget {
   final SocketHelper socketType;
   final FutureOr Function(BuildContext context, ChatMessages message) onReceiveMessage;
-  final PreferredSizeWidget appBar;
-  final Widget bottomBar;
   final PagifyController<ChatMessages> controller;
   final Future<Response> Function(BuildContext context, int page) asyncCall;
   final PagifyData<ChatMessages> Function(Response response) mapper;
   final PagifyErrorMapper errorMapper;
-  final Widget? chatBackground;
   final Widget? loadingBuilder;
   final Widget Function(PagifyException e)? errorBuilder;
   final Widget Function(ChatMessages message) rightMessageBuilder;
@@ -30,15 +27,12 @@ class EasyChat<Response> extends StatelessWidget {
   const EasyChat({super.key,
     required this.socketType,
     required this.onReceiveMessage,
-    required this.appBar,
-    required this.bottomBar,
     required this.controller,
     required this.asyncCall,
     required this.mapper,
     required this.errorMapper,
     required this.rightMessageBuilder,
     required this.leftMessageBuilder,
-    this.chatBackground,
     this.errorBuilder,
     this.loadingBuilder,
     this.onMessageTap,
@@ -50,39 +44,22 @@ class EasyChat<Response> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Column(
-        spacing: 20,
-        children: [
-          appBar,
-          Expanded(
-            child: Stack(
-              children: [
-                if(chatBackground != null)
-                  chatBackground!,
-                ChatBody<Response>(
-                  cacheExtent: cacheExtent,
-                  itemExtent: itemExtent,
-                  socketType: socketType,
-                  onReceiveMessage: onReceiveMessage,
-                  errorMapper: errorMapper,
-                  mapper: mapper,
-                  asyncCall: asyncCall,
-                  controller: controller,
-                  rightMessageBuilder: rightMessageBuilder,
-                  leftMessageBuilder: leftMessageBuilder,
-                  onMessageTap: onMessageTap,
-                  errorBuilder: errorBuilder,
-                  loadingBuilder: loadingBuilder,
-                  onMessageDoublePress: onMessageDoublePress,
-                  onMessageLongPress: onMessageLongPress,
-                ),
-              ],
-            ),
-          ),
-          bottomBar
-        ],
-      ),
+    return ChatBody<Response>(
+      cacheExtent: cacheExtent,
+      itemExtent: itemExtent,
+      socketType: socketType,
+      onReceiveMessage: onReceiveMessage,
+      errorMapper: errorMapper,
+      mapper: mapper,
+      asyncCall: asyncCall,
+      controller: controller,
+      rightMessageBuilder: rightMessageBuilder,
+      leftMessageBuilder: leftMessageBuilder,
+      onMessageTap: onMessageTap,
+      errorBuilder: errorBuilder,
+      loadingBuilder: loadingBuilder,
+      onMessageDoublePress: onMessageDoublePress,
+      onMessageLongPress: onMessageLongPress,
     );
   }
 }
