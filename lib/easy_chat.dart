@@ -14,7 +14,6 @@ class EasyChat<Response> extends StatelessWidget {
   final Future<Response> Function(BuildContext context, int page) asyncCall;
   final PagifyData<ChatMessages> Function(Response response) mapper;
   final PagifyErrorMapper errorMapper;
-  final Widget? chatBackground;
   final Widget? loadingBuilder;
   final Widget Function(PagifyException e)? errorBuilder;
   final Widget Function(ChatMessages message) rightMessageBuilder;
@@ -34,7 +33,6 @@ class EasyChat<Response> extends StatelessWidget {
     required this.errorMapper,
     required this.rightMessageBuilder,
     required this.leftMessageBuilder,
-    this.chatBackground,
     this.errorBuilder,
     this.loadingBuilder,
     this.onMessageTap,
@@ -46,28 +44,22 @@ class EasyChat<Response> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        if(chatBackground != null)
-          chatBackground!,
-        ChatBody<Response>(
-          cacheExtent: cacheExtent,
-          itemExtent: itemExtent,
-          socketType: socketType,
-          onReceiveMessage: onReceiveMessage,
-          errorMapper: errorMapper,
-          mapper: mapper,
-          asyncCall: asyncCall,
-          controller: controller,
-          rightMessageBuilder: rightMessageBuilder,
-          leftMessageBuilder: leftMessageBuilder,
-          onMessageTap: onMessageTap,
-          errorBuilder: errorBuilder,
-          loadingBuilder: loadingBuilder,
-          onMessageDoublePress: onMessageDoublePress,
-          onMessageLongPress: onMessageLongPress,
-        ),
-      ],
+    return ChatBody<Response>(
+      cacheExtent: cacheExtent,
+      itemExtent: itemExtent,
+      socketType: socketType,
+      onReceiveMessage: onReceiveMessage,
+      errorMapper: errorMapper,
+      mapper: mapper,
+      asyncCall: asyncCall,
+      controller: controller,
+      rightMessageBuilder: rightMessageBuilder,
+      leftMessageBuilder: leftMessageBuilder,
+      onMessageTap: onMessageTap,
+      errorBuilder: errorBuilder,
+      loadingBuilder: loadingBuilder,
+      onMessageDoublePress: onMessageDoublePress,
+      onMessageLongPress: onMessageLongPress,
     );
   }
 }
