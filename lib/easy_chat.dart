@@ -7,23 +7,26 @@ import 'factory.dart';
 import 'widgets/chat_body.dart';
 import 'models/chat_message.dart';
 
-class EasyChat<Response> extends StatelessWidget {
+class EasyChat<Response> extends StatefulWidget {
   final SocketHelper socketType;
   final FutureOr Function(BuildContext context, ChatMessages message) onReceiveMessage;
   final PagifyController<ChatMessages> controller;
-  final Future<Response> Function(BuildContext context, int page) asyncCall;
+  final Future<Response> Function(BuildContext context, int currentPage) asyncCall;
   final PagifyData<ChatMessages> Function(Response response) mapper;
   final PagifyErrorMapper errorMapper;
   final Widget? loadingBuilder;
   final Widget Function(PagifyException e)? errorBuilder;
   final Widget Function(ChatMessages message) rightMessageBuilder;
   final Widget Function(ChatMessages message) leftMessageBuilder;
-  final void Function(BuildContext context, ChatMessages message)? onMessageTap;
-  final void Function(BuildContext context, ChatMessages message)? onMessageLongPress;
-  final void Function(BuildContext context, ChatMessages message)? onMessageDoublePress;
   final double? cacheExtent;
   final double? itemExtent;
-  final void Function(ScrollPosition position)? onScrollPositionChanged;
+  final String? noConnectionText;
+  final Widget? emptyView;
+  final FutureOr<void> Function()? onLoading;
+  final FutureOr<void> Function(BuildContext, int, PagifyException)? onError;
+  final FutureOr<void> Function(BuildContext, List<ChatMessages>)? onSuccess;
+  final FutureOr<void> Function(bool isConnect)? onConnectivityChanged;
+
 
   const EasyChat({super.key,
     required this.socketType,
@@ -36,33 +39,60 @@ class EasyChat<Response> extends StatelessWidget {
     required this.leftMessageBuilder,
     this.errorBuilder,
     this.loadingBuilder,
-    this.onMessageTap,
-    this.onMessageLongPress,
-    this.onMessageDoublePress,
     this.cacheExtent,
     this.itemExtent,
-    this.onScrollPositionChanged,
+    this.onLoading,
+    this.onError,
+    this.onSuccess,
+    this.onConnectivityChanged,
+    this.noConnectionText,
+    this.emptyView,
   });
+
+  @override
+  State<EasyChat<Response>> createState() => _EasyChatState<Response>();
+}
+
+class _EasyChatState<Response> extends State<EasyChat<Response>> {
+
+  Future<void> _init() async {
+    await widget.socketType.connect();
+    widget.socketType.onReceiveMessage().listen(
+            (event) => widget.onReceiveMessage.call(context, event)
+    );
+  }
+
+  @override
+  void initState() {
+    _init();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    widget.socketType.disconnect();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return ChatBody<Response>(
-      onScrollPositionChanged: onScrollPositionChanged,
-      cacheExtent: cacheExtent,
-      itemExtent: itemExtent,
-      socketType: socketType,
-      onReceiveMessage: onReceiveMessage,
-      errorMapper: errorMapper,
-      mapper: mapper,
-      asyncCall: asyncCall,
-      controller: controller,
-      rightMessageBuilder: rightMessageBuilder,
-      leftMessageBuilder: leftMessageBuilder,
-      onMessageTap: onMessageTap,
-      errorBuilder: errorBuilder,
-      loadingBuilder: loadingBuilder,
-      onMessageDoublePress: onMessageDoublePress,
-      onMessageLongPress: onMessageLongPress,
+      noConnectionText: widget.noConnectionText,
+      emptyView: widget.emptyView,
+      onLoading: widget.onLoading,
+      onError: widget.onError,
+      onSuccess: widget.onSuccess,
+      onConnectivityChanged: widget.onConnectivityChanged,
+      cacheExtent: widget.cacheExtent,
+      itemExtent: widget.itemExtent,
+      errorMapper: widget.errorMapper,
+      mapper: widget.mapper,
+      asyncCall: widget.asyncCall,
+      controller: widget.controller,
+      rightMessageBuilder: widget.rightMessageBuilder,
+      leftMessageBuilder: widget.leftMessageBuilder,
+      errorBuilder: widget.errorBuilder,
+      loadingBuilder: widget.loadingBuilder,
     );
   }
 }
