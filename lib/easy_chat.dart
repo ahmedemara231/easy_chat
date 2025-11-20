@@ -9,7 +9,6 @@ import 'models/chat_message.dart';
 
 class EasyChat<Response> extends StatefulWidget {
   final SocketHelper socketType;
-  final FutureOr Function(BuildContext context, ChatMessages message) onReceiveMessage;
   final PagifyController<ChatMessages> controller;
   final Future<Response> Function(BuildContext context, int currentPage) asyncCall;
   final PagifyData<ChatMessages> Function(Response response) mapper;
@@ -30,7 +29,6 @@ class EasyChat<Response> extends StatefulWidget {
 
   const EasyChat({super.key,
     required this.socketType,
-    required this.onReceiveMessage,
     required this.controller,
     required this.asyncCall,
     required this.mapper,
@@ -57,9 +55,6 @@ class _EasyChatState<Response> extends State<EasyChat<Response>> {
 
   Future<void> _init() async {
     await widget.socketType.connect();
-    widget.socketType.onReceiveMessage().listen(
-            (event) => widget.onReceiveMessage.call(context, event)
-    );
   }
 
   @override

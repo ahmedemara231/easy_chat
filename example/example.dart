@@ -60,8 +60,10 @@ class Example extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: EasyChat(
-        socketType: SignalRImpl(
+        socketType: ClientIOImpl(
           url: 'server url',
+          roomId: 0,
+          onReceiveMessage: (msg){},
           jsonToChatMessage: (jsonMessage) => ChatMessages(
               senderImage: jsonMessage['senderImage'],
               message: jsonMessage['message'],
@@ -69,7 +71,6 @@ class Example extends StatelessWidget {
               isFromMe: jsonMessage['isFromMe']
           ),
         ),
-        onReceiveMessage: (context, message) {},
           controller: _chatController,
           asyncCall: (context, page) async => await testFun(page),
           mapper: (response) => PagifyData(

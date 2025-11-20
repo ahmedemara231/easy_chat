@@ -4,76 +4,39 @@ import 'package:easy_chat/models/chat_message.dart';
 
 abstract interface class SocketHelper{
   final String url;
+  final int roomId;
   ChatMessages Function(Map<String, dynamic> jsonMessage) jsonToChatMessage;
-  SocketHelper({required this.url, required this.jsonToChatMessage});
+  FutureOr<void> Function(ChatMessages message) onReceiveMessage;
 
-  FutureOr<void> connect();
-  FutureOr<void> disconnect();
-  Stream<ChatMessages> onReceiveMessage(); // should make json parsing here to chat message
+  SocketHelper({
+    required this.roomId,
+    required this.url,
+    required this.jsonToChatMessage,
+    required this.onReceiveMessage
+  });
+
+  FutureOr<void> connect({dynamic Function(dynamic)? handler});
+  FutureOr<void> disconnect({dynamic Function(dynamic)? handler});
 }
 
-class PusherImpl extends SocketHelper{
-  PusherImpl({required super.url, required super.jsonToChatMessage});
-  @override
-  FutureOr<void> connect() {
-    // TODO: implement connect
-    throw UnimplementedError();
-  }
-
-  @override
-  FutureOr<void> disconnect() {
-    // TODO: implement disconnect
-    throw UnimplementedError();
-  }
-
-  @override
-  Stream<ChatMessages> onReceiveMessage() {
-    // TODO: implement onReceiveMessage
-    throw UnimplementedError();
-  }
-
-}
-
-class SignalRImpl extends SocketHelper{
-  SignalRImpl({required super.url, required super.jsonToChatMessage});
-
-  @override
-  FutureOr<void> connect() {
-    // TODO: implement connect
-    // throw UnimplementedError();
-  }
-
-  @override
-  FutureOr<void> disconnect() {
-    // TODO: implement disconnect
-    // throw UnimplementedError();
-  }
-
-  @override
-  Stream<ChatMessages> onReceiveMessage() {
-    return Stream.periodic(Duration(seconds: 1), (count) => ChatMessages(senderImage: 'senderImage', message: 'any msg', time: 'time', isFromMe: count.isEven? true : false));
-  }
-}
 
 class ClientIOImpl extends SocketHelper{
-  ClientIOImpl({required super.url, required super.jsonToChatMessage});
+  ClientIOImpl({
+    required super.roomId,
+    required super.url,
+    required super.jsonToChatMessage,
+    required super.onReceiveMessage
+  });
 
   @override
-  FutureOr<void> connect() {
+  FutureOr<void> connect({dynamic Function(dynamic)? handler}) {
     // TODO: implement connect
     throw UnimplementedError();
   }
 
   @override
-  FutureOr<void> disconnect() {
+  FutureOr<void> disconnect({dynamic Function(dynamic)? handler}) {
     // TODO: implement disconnect
     throw UnimplementedError();
   }
-
-  @override
-  Stream<ChatMessages> onReceiveMessage() {
-    // TODO: implement onReceiveMessage
-    throw UnimplementedError();
-  }
-
 }
