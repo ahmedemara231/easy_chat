@@ -63,6 +63,8 @@ class Example extends StatelessWidget {
         socketType: ClientIOImpl(
           url: 'server url',
           roomId: 0,
+          // events
+          // on receive event
           onReceiveMessage: (msg){},
           jsonToChatMessage: (jsonMessage) => ChatMessages(
               senderImage: jsonMessage['senderImage'],
