@@ -63,15 +63,23 @@ class Example extends StatelessWidget {
         socketType: ClientIOImpl(
           url: 'server url',
           roomId: 0,
-          // events
-          // on receive event
-          onReceiveMessage: (msg){},
+          extraHeaders: {},
+          extraParams: {},
+          events: EasyChatEvents(
+            otherEvents: [],
+            messageEvents: MessageEvents(
+                  receiveMsgEvent: 'receiveMsgEvent',
+                  sendMsgEvent: 'sendMsgEvent'
+              ),
+          ),
           jsonToChatMessage: (jsonMessage) => ChatMessages(
               senderImage: jsonMessage['senderImage'],
               message: jsonMessage['message'],
               time: jsonMessage['time'],
               isFromMe: jsonMessage['isFromMe']
           ),
+          onReceiveMessage: (msg){},
+          onReceiveAnyEvent: (e, d){}
         ),
           controller: _chatController,
           asyncCall: (context, page) async => await testFun(page),
