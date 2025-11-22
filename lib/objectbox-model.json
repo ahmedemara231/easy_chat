@@ -1,0 +1,57 @@
+{
+  "_note1": "KEEP THIS FILE! Check it into a version control system (VCS) like git.",
+  "_note2": "ObjectBox manages crucial IDs for your object model. See docs for details.",
+  "_note3": "If you have VCS merge conflicts, you must resolve them according to ObjectBox docs.",
+  "entities": [
+    {
+      "id": "1:4515869812050567965",
+      "lastPropertyId": "6:1070233151992812861",
+      "name": "ChatMessages",
+      "properties": [
+        {
+          "id": "1:6142807982565650428",
+          "name": "message",
+          "type": 9
+        },
+        {
+          "id": "2:6388378791987321556",
+          "name": "isFromMe",
+          "type": 1
+        },
+        {
+          "id": "3:1135518586066249206",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "4:2723234422837266277",
+          "name": "image",
+          "type": 9
+        },
+        {
+          "id": "5:5844680164934660079",
+          "name": "time",
+          "type": 9
+        },
+        {
+          "id": "6:1070233151992812861",
+          "name": "type",
+          "type": 9
+        }
+      ],
+      "relations": []
+    }
+  ],
+  "lastEntityId": "1:4515869812050567965",
+  "lastIndexId": "0:0",
+  "lastRelationId": "0:0",
+  "lastSequenceId": "0:0",
+  "modelVersion": 5,
+  "modelVersionParserMinimum": 5,
+  "retiredEntityUids": [],
+  "retiredIndexUids": [],
+  "retiredPropertyUids": [],
+  "retiredRelationUids": [],
+  "version": 1
+}
