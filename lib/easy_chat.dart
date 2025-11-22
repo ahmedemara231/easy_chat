@@ -3,12 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:pagify/helpers/data_and_pagination_data.dart';
 import 'package:pagify/helpers/errors.dart';
 import 'package:pagify/pagify.dart';
-import 'factory.dart';
 import 'widgets/chat_body.dart';
 import 'models/chat_message.dart';
 
-class EasyChat<Response> extends StatefulWidget {
-  final SocketHelper socketType;
+class EasyChat<Response> extends StatelessWidget {
   final PagifyController<ChatMessages> controller;
   final Future<Response> Function(BuildContext context, int currentPage) asyncCall;
   final PagifyData<ChatMessages> Function(Response response) mapper;
@@ -28,7 +26,6 @@ class EasyChat<Response> extends StatefulWidget {
 
 
   const EasyChat({super.key,
-    required this.socketType,
     required this.controller,
     required this.asyncCall,
     required this.mapper,
@@ -48,49 +45,24 @@ class EasyChat<Response> extends StatefulWidget {
   });
 
   @override
-  State<EasyChat<Response>> createState() => _EasyChatState<Response>();
-}
-
-class _EasyChatState<Response> extends State<EasyChat<Response>> {
-
-  void _init() async {
-    widget.socketType
-      ..initSocket()
-      ..initConfig()
-      ..connect();
-  }
-
-  @override
-  void initState() {
-    _init();
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    widget.socketType.disconnect();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return ChatBody<Response>(
-      noConnectionText: widget.noConnectionText,
-      emptyView: widget.emptyView,
-      onLoading: widget.onLoading,
-      onError: widget.onError,
-      onSuccess: widget.onSuccess,
-      onConnectivityChanged: widget.onConnectivityChanged,
-      cacheExtent: widget.cacheExtent,
-      itemExtent: widget.itemExtent,
-      errorMapper: widget.errorMapper,
-      mapper: widget.mapper,
-      asyncCall: widget.asyncCall,
-      controller: widget.controller,
-      rightMessageBuilder: widget.rightMessageBuilder,
-      leftMessageBuilder: widget.leftMessageBuilder,
-      errorBuilder: widget.errorBuilder,
-      loadingBuilder: widget.loadingBuilder,
+      noConnectionText: noConnectionText,
+      emptyView: emptyView,
+      onLoading: onLoading,
+      onError: onError,
+      onSuccess: onSuccess,
+      onConnectivityChanged: onConnectivityChanged,
+      cacheExtent: cacheExtent,
+      itemExtent: itemExtent,
+      errorMapper: errorMapper,
+      mapper: mapper,
+      asyncCall: asyncCall,
+      controller: controller,
+      rightMessageBuilder: rightMessageBuilder,
+      leftMessageBuilder: leftMessageBuilder,
+      errorBuilder: errorBuilder,
+      loadingBuilder: loadingBuilder,
     );
   }
 }

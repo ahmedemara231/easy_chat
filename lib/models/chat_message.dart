@@ -1,34 +1,42 @@
-import 'package:objectbox/objectbox.dart';
+enum MessageState{pending, sent, delivered, read}
 
-@Entity()
+class Message{
+  final int id;
+  final String body;
+  final String type;
+
+  Message({
+    required this.id,
+    required this.type,
+    required this.body,
+  });
+}
+
+class Sender{
+  final int id;
+  final String name;
+  final String image;
+  final bool isFromMe;
+
+  Sender({
+    required this.id,
+    required this.name,
+    required this.image,
+    required this.isFromMe,
+  });
+}
+
+
 class ChatMessages{
-  String? message;
-  bool? isFromMe;
-  int? id;
-  String? image;
+  final Message message;
+  final Sender sender;
   String? time;
-  String? type;
+  MessageState? messageState;
 
   ChatMessages({
-    this.message,
-    this.isFromMe,
-    this.image,
-    this.type,
+    required this.message,
+    required this.sender,
     this.time,
-    this.id = 0,
+    this.messageState
   });
-
-  factory ChatMessages.fromJson(Map<String, dynamic> json) => ChatMessages(
-    image: json['avatar'],
-    message: json['body'],
-    time: json['created_at'],
-    type: json['type'],
-    isFromMe: (json['sender_id'] as int) == 0? false : true,
-    id: json['id'],
-  );
-
-  Map<String, dynamic> toJson() => {
-    'body': message,
-    'type': type,
-  };
 }

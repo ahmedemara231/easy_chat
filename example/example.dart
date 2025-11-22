@@ -1,5 +1,4 @@
 import 'package:easy_chat/easy_chat.dart';
-import 'package:easy_chat/factory.dart';
 import 'package:easy_chat/models/chat_message.dart';
 import 'package:flutter/material.dart';
 import 'package:pagify/helpers/data_and_pagination_data.dart';
@@ -29,30 +28,36 @@ class Example extends StatelessWidget {
     List<ChatMessages> msgs = [];
     await Future.delayed(const Duration(seconds: 2));
     msgs.addAll([
-      ChatMessages(image: 'image', message: 'message1', time: 'time1', type: 'text', isFromMe: true),
-      ChatMessages(image: 'image', message: 'message2', time: 'time1', type: 'text', isFromMe: true),
-      ChatMessages(image: 'image', message: 'message3', time: 'time1', type: 'text', isFromMe: false),
-      ChatMessages(image: 'image', message: 'message4', time: 'time1', type: 'text', isFromMe: false),
-      ChatMessages(image: 'image', message: 'message5', time: 'time1', type: 'text', isFromMe: true),
-      ChatMessages(image: 'image', message: 'message6', time: 'time1', type: 'text', isFromMe: false),
+      ChatMessages(
+        message: Message(id: 0, type: 'type', body: 'body'),
+        sender: Sender(id: 0, name: 'name', image: 'image', isFromMe: true),
+        messageState: MessageState.sent,
+        time: '',
+      ),
+      ChatMessages(
+        message: Message(id: 0, type: 'type', body: 'body'),
+        sender: Sender(id: 0, name: 'name', image: 'image', isFromMe: true),
+        messageState: MessageState.sent,
+        time: '',
+      ),
     ]);
     return msgs;
   }
 
   Widget _buildMessage(ChatMessages chatMessage) {
-    if(chatMessage.message?.contains('png')??false){
-      return Image.network(chatMessage.message??'');
-    }else if(chatMessage.message?.contains('pdf')??false){
+    if(chatMessage.message.body.contains('png')){
+      return Image.network(chatMessage.message.body);
+    }else if(chatMessage.message.body.contains('pdf')){
       // return pgf file
       return SizedBox.shrink();
-    }else if(chatMessage.message?.contains('mp4')??false){
+    }else if(chatMessage.message.body.contains('mp4')){
       // return video
       return SizedBox.shrink();
-    }else if(chatMessage.message?.contains('mp3')??false){
+    }else if(chatMessage.message.body.contains('mp3')){
       // return audio
       return SizedBox.shrink();
     }else{
-      return Text(chatMessage.message??'');
+      return Text(chatMessage.message.body);
     }
   }
   
@@ -60,26 +65,6 @@ class Example extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: EasyChat(
-        socketType: ClientIOImpl(
-          url: 'server url',
-          extraHeaders: {},
-          extraParams: {},
-          events: EasyChatEvents(
-            otherEvents: [],
-            messageEvents: MessageEvents(
-                  receiveMsgEvent: 'receiveMsgEvent',
-                  sendMsgEvent: 'sendMsgEvent'
-              ), chatEvents: ChatEvents(enterChatEvent: 'enterChatEvent', exitChatEvent: 'exitChatEvent'),
-          ),
-          jsonToChatMessage: (jsonMessage) => ChatMessages(
-              image: jsonMessage['senderImage'],
-              message: jsonMessage['message'],
-              time: jsonMessage['time'],
-              isFromMe: jsonMessage['isFromMe'], type: jsonMessage['type']
-          ),
-          onReceiveMessage: (msg){},
-          onReceiveAnyEvent: (e, d){}, roomId: 0
-        ),
           controller: _chatController,
           asyncCall: (context, page) async => await testFun(page),
           mapper: (response) => PagifyData(
