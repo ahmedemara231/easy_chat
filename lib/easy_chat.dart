@@ -53,8 +53,11 @@ class EasyChat<Response> extends StatefulWidget {
 
 class _EasyChatState<Response> extends State<EasyChat<Response>> {
 
-  Future<void> _init() async {
-    await widget.socketType.connect();
+  void _init() async {
+    widget.socketType
+      ..initSocket()
+      ..initConfig()
+      ..connect();
   }
 
   @override

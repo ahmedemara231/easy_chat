@@ -1,7 +1,9 @@
 import 'dart:async';
 import 'dart:developer';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:easy_chat/models/chat_message.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
+import 'offline/local_db.dart';
 
 class MessageEvents {
   final String receiveMsgEvent;
@@ -40,6 +42,7 @@ class EasyChatEvents{
 abstract interface class SocketHelper{
   final String url;
   final int roomId;
+  final bool enableOfflineState;
   final dynamic Function(dynamic)? onConnect;
   final dynamic Function(dynamic)? onDisconnect;
   final dynamic Function(dynamic)? onReconnect;
@@ -48,24 +51,29 @@ abstract interface class SocketHelper{
   final FutureOr<void> Function(String event, dynamic data)? onReceiveAnyEvent;
   final EasyChatEvents events;
 
-  SocketHelper({
-    required this.url,
-    required this.roomId,
-    required this.jsonToChatMessage,
-    required this.onReceiveMessage,
-    required this.events,
-    this.onReceiveAnyEvent,
-    this.onConnect,
-    this.onDisconnect,
-    this.onReconnect,
-  });
-
+  FutureOr<void> initSocket();
+  FutureOr<void> initConfig();
   FutureOr<void> connect();
   FutureOr<void> disconnect();
   FutureOr<void> reconnect();
 
   FutureOr<void> sendMessage(Map<String, dynamic> data);
   FutureOr<void> emitEvent({required String event, Map<String, dynamic>? data});
+
+  SocketHelper({
+    required this.url,
+    required this.roomId,
+    required this.jsonToChatMessage,
+    required this.onReceiveMessage,
+    required this.events,
+    this.enableOfflineState = false,
+    this.onReceiveAnyEvent,
+    this.onConnect,
+    this.onDisconnect,
+    this.onReconnect,
+  }){
+    MessagesBox.create();
+  }
 }
 
 class ClientIOImpl extends SocketHelper{
@@ -75,6 +83,7 @@ class ClientIOImpl extends SocketHelper{
   ClientIOImpl({
     this.extraParams,
     this.extraHeaders,
+    super.enableOfflineState,
     super.onConnect,
     super.onDisconnect,
     super.onReconnect,
@@ -87,20 +96,26 @@ class ClientIOImpl extends SocketHelper{
   });
 
   late final IO.Socket socket;
-  void _init(){
-    socket = IO.io(url, IO.OptionBuilder()
-        .setTransports(['websocket'])
-        .disableAutoConnect()
-        .setExtraHeaders(extraHeaders ?? {})
-        .setQuery(extraParams ?? {})
-        .build()
-    )..connect();
-  }
 
   @override
-  FutureOr<void> connect() {
-    _init();
+  FutureOr<void> initSocket() {
+    socket = IO.io(
+        url,
+        IO.OptionBuilder()
+            .setTransports(['websocket'])
+            .disableAutoConnect()
+            // .enableReconnection()
+            // .setReconnectionAttempts(double.infinity.toInt())
+            // .setReconnectionDelay(1000)
+            // .setReconnectionDelayMax(5000)
+            .enableForceNew()
+            .setExtraHeaders(extraHeaders ?? {})
+            .setQuery(extraParams ?? {})
+            .build()
+    );
+  }
 
+  void initSocketStates(){
     socket.onConnect((d) {
       onConnect?.call(d);
       emitEvent(event: events.chatEvents.enterChatEvent, data: {'room_id' : roomId});
@@ -111,13 +126,16 @@ class ClientIOImpl extends SocketHelper{
       emitEvent(event: events.chatEvents.exitChatEvent, data: {'room_id' : roomId});
     });
 
-    socket.onReconnect((d) => onReconnect?.call(d));
+    socket
+      ..onReconnect((d) => onReconnect?.call(d))
+      ..onReconnectAttempt((data) => log('Socket reconnection attempt: $data'))
+      ..onReconnectError((data) => log('Socket reconnection error: $data'))
+      ..onReconnectFailed((_) => log('Socket reconnection failed'));;
 
 
-    socket.onConnectError((err) => log('❌ Socket connect error: $err'));
-    socket.onError((err) => log('❌ Socket error: $err'));
-
-    onReceiveEvent();
+    socket
+      ..onConnectError((err) => log('❌ Socket connect error: $err'))
+      ..onError((err) => log('❌ Socket error: $err'));
   }
 
   void onReceiveEvent(){
@@ -133,6 +151,23 @@ class ClientIOImpl extends SocketHelper{
 
 
   @override
+  FutureOr<void> initConfig(){
+    initSocketStates();
+    onReceiveEvent();
+  }
+
+  @override
+  FutureOr<void> connect() {
+    socket.connect();
+  }
+
+  @override
+  FutureOr<void> reconnect() async{
+    await disconnect();
+    await connect();
+  }
+
+  @override
   FutureOr<void> disconnect() {
     socket.disconnect();
     socket.dispose();
@@ -140,17 +175,41 @@ class ClientIOImpl extends SocketHelper{
 
   @override
   FutureOr<void> sendMessage(Map<String, dynamic> data) {
-    socket.emit(events.messageEvents.sendMsgEvent, [data]);
+    if(enableOfflineState){
+      _checkAndEmit(
+        onConnected: () => _emit(event: events.messageEvents.sendMsgEvent, data: data),
+        onDisconnected: () {
+          final ChatMessages msg = jsonToChatMessage.call(data);
+          MessagesBox.put(msg);
+          onReceiveMessage.call(msg);
+        }
+      );
+
+    }else{
+      socket.emit(events.messageEvents.sendMsgEvent, [data]);
+    }
   }
 
   @override
   FutureOr<void> emitEvent({required String event, Map<String, dynamic>? data}) {
-    socket.emit(event, [data]);
+    assert(event != events.messageEvents.sendMsgEvent);
+    _emit(event: event, data: data);
   }
 
-  @override
-  FutureOr<void> reconnect() async{
-    await disconnect();
-    await connect();
+  Future<void> _checkAndEmit({
+    required FutureOr<void> Function() onConnected,
+    required FutureOr<void> Function() onDisconnected,
+  })async{
+    final connectivityResult = await Connectivity().checkConnectivity();
+
+    if(connectivityResult.contains(ConnectivityResult.none)){
+      await onDisconnected.call();
+
+    }else{
+      await onConnected.call();
+    }
+  }
+  void _emit({required String event, Map<String, dynamic>? data}){
+    socket.emit(event, [data]);
   }
 }

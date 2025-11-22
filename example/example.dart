@@ -40,19 +40,19 @@ class Example extends StatelessWidget {
   }
 
   Widget _buildMessage(ChatMessages chatMessage) {
-    if(chatMessage.message.contains('png')){
-      return Image.network(chatMessage.message);
-    }else if(chatMessage.message.contains('pdf')){
+    if(chatMessage.message?.contains('png')??false){
+      return Image.network(chatMessage.message??'');
+    }else if(chatMessage.message?.contains('pdf')??false){
       // return pgf file
       return SizedBox.shrink();
-    }else if(chatMessage.message.contains('mp4')){
+    }else if(chatMessage.message?.contains('mp4')??false){
       // return video
       return SizedBox.shrink();
-    }else if(chatMessage.message.contains('mp3')){
+    }else if(chatMessage.message?.contains('mp3')??false){
       // return audio
       return SizedBox.shrink();
     }else{
-      return Text(chatMessage.message);
+      return Text(chatMessage.message??'');
     }
   }
   

@@ -1,18 +1,21 @@
+import 'package:objectbox/objectbox.dart';
+
+@Entity()
 class ChatMessages{
-  final String message;
-  final bool isFromMe;
-  final int? id;
-  final String? image;
-  final String? time;
-  final String? type;
+  String? message;
+  bool? isFromMe;
+  int? id;
+  String? image;
+  String? time;
+  String? type;
 
   ChatMessages({
-    required this.message,
-    required this.isFromMe,
+    this.message,
+    this.isFromMe,
     this.image,
     this.type,
     this.time,
-    this.id,
+    this.id = 0,
   });
 
   factory ChatMessages.fromJson(Map<String, dynamic> json) => ChatMessages(
