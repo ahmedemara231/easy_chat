@@ -29,16 +29,16 @@ class Example extends StatelessWidget {
     List<ChatMessages> msgs = [];
     await Future.delayed(const Duration(seconds: 2));
     msgs.addAll([
-      ChatMessages(senderImage: 'image', message: 'message1', time: 'time1', isFromMe: true),
-      ChatMessages(senderImage: 'image', message: 'message2', time: 'time1', isFromMe: true),
-      ChatMessages(senderImage: 'image', message: 'message3', time: 'time1', isFromMe: false),
-      ChatMessages(senderImage: 'image', message: 'message4', time: 'time1', isFromMe: false),
-      ChatMessages(senderImage: 'image', message: 'message5', time: 'time1', isFromMe: true),
-      ChatMessages(senderImage: 'image', message: 'message6', time: 'time1', isFromMe: false),
+      ChatMessages(image: 'image', message: 'message1', time: 'time1', type: 'text', isFromMe: true),
+      ChatMessages(image: 'image', message: 'message2', time: 'time1', type: 'text', isFromMe: true),
+      ChatMessages(image: 'image', message: 'message3', time: 'time1', type: 'text', isFromMe: false),
+      ChatMessages(image: 'image', message: 'message4', time: 'time1', type: 'text', isFromMe: false),
+      ChatMessages(image: 'image', message: 'message5', time: 'time1', type: 'text', isFromMe: true),
+      ChatMessages(image: 'image', message: 'message6', time: 'time1', type: 'text', isFromMe: false),
     ]);
     return msgs;
   }
-   //
+
   Widget _buildMessage(ChatMessages chatMessage) {
     if(chatMessage.message.contains('png')){
       return Image.network(chatMessage.message);
@@ -62,7 +62,6 @@ class Example extends StatelessWidget {
       body: EasyChat(
         socketType: ClientIOImpl(
           url: 'server url',
-          roomId: 0,
           extraHeaders: {},
           extraParams: {},
           events: EasyChatEvents(
@@ -70,16 +69,16 @@ class Example extends StatelessWidget {
             messageEvents: MessageEvents(
                   receiveMsgEvent: 'receiveMsgEvent',
                   sendMsgEvent: 'sendMsgEvent'
-              ),
+              ), chatEvents: ChatEvents(enterChatEvent: 'enterChatEvent', exitChatEvent: 'exitChatEvent'),
           ),
           jsonToChatMessage: (jsonMessage) => ChatMessages(
-              senderImage: jsonMessage['senderImage'],
+              image: jsonMessage['senderImage'],
               message: jsonMessage['message'],
               time: jsonMessage['time'],
-              isFromMe: jsonMessage['isFromMe']
+              isFromMe: jsonMessage['isFromMe'], type: jsonMessage['type']
           ),
           onReceiveMessage: (msg){},
-          onReceiveAnyEvent: (e, d){}
+          onReceiveAnyEvent: (e, d){}, roomId: 0
         ),
           controller: _chatController,
           asyncCall: (context, page) async => await testFun(page),
