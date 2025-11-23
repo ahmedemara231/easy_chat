@@ -63,14 +63,16 @@ class ChatBody<Response> extends StatelessWidget {
       ignoreErrorBuilderWhenErrorOccursAndListIsNotEmpty: true,
       errorMapper: errorMapper,
       errorBuilder: errorBuilder,
-      itemBuilder: (context, data, index, element) => Align(
-        alignment: element.sender.isFromMe?
-        Alignment.topRight : Alignment.topLeft,
-        child: MessageWidget(
-          message: element,
-          leftMessageBuilder: leftMessageBuilder,
-          rightMessageBuilder: rightMessageBuilder,
-        ),
+      itemBuilder: (context, data, index, element) => Row(
+        mainAxisAlignment: element.sender.isFromMe?
+        MainAxisAlignment.start : MainAxisAlignment.end,
+        children: [
+          MessageWidget(
+            message: element,
+            leftMessageBuilder: leftMessageBuilder,
+            rightMessageBuilder: rightMessageBuilder,
+          ),
+        ],
       ),
     );
   }
