@@ -1,27 +1,42 @@
-class ChatMessages{
-  final String senderImage;
-  final String message;
-  final String time;
-  final bool  isFromMe;
+enum MessageState{pending, sent, delivered, read}
 
-  ChatMessages({
-    required this.senderImage,
-    required this.message,
-    required this.time,
+class Message{
+  final int id;
+  final String body;
+  final String type;
+
+  Message({
+    required this.id,
+    required this.type,
+    required this.body,
+  });
+}
+
+class Sender{
+  final int id;
+  final String name;
+  final String image;
+  final bool isFromMe;
+
+  Sender({
+    required this.id,
+    required this.name,
+    required this.image,
     required this.isFromMe,
   });
+}
 
-  // factory ChatMessages.fromJson(Map<String, dynamic> json) => ChatMessages(
-  //     senderImage: json['senderImage'],
-  //     message: json['message'],
-  //     time: json['time'],
-  //     isFromMe: json['isFromMe']
-  // );
 
-  // Map<String, dynamic> toJson() => {
-  //   'senderImage': senderImage,
-  //   'message': message,
-  //   'time': time,
-  //   'isFromMe': isFromMe
-  // };
+class ChatMessages{
+  final Message message;
+  final Sender sender;
+  String? time;
+  MessageState? messageState;
+
+  ChatMessages({
+    required this.message,
+    required this.sender,
+    this.time,
+    this.messageState
+  });
 }

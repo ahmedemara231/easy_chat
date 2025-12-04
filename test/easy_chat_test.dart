@@ -1,12 +1,19 @@
-// import 'package:flutter_test/flutter_test.dart';
-//
-// import 'package:easy_chat/easy_chat.dart';
-//
-// void main() {
-//   test('adds one to input values', () {
-//     final calculator = Calculator();
-//     expect(calculator.addOne(2), 3);
-//     expect(calculator.addOne(-7), -6);
-//     expect(calculator.addOne(0), 1);
-//   });
-// }
+import 'package:flutter_test/flutter_test.dart';
+
+// Import all test files
+import 'models/chat_message_test.dart' as chat_message_test;
+import 'widgets/message_widget_test.dart' as message_widget_test;
+import 'widgets/easy_chat_test.dart' as easy_chat_test;
+
+void main() {
+  group('Easy Chat Package Tests', () {
+    group('Model Tests', () {
+      chat_message_test.main();
+    });
+
+    group('Widget Tests', () {
+      message_widget_test.main();
+      easy_chat_test.main();
+    });
+  });
+}

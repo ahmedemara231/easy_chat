@@ -15,7 +15,7 @@ class MessageWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return message.isFromMe?
+    return message.sender.isFromMe?
     rightMessageBuilder(message) :
     leftMessageBuilder(message);
   }
