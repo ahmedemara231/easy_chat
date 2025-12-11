@@ -8,6 +8,7 @@ import 'models/chat_message.dart';
 
 class EasyChat<Response> extends StatelessWidget {
   final PagifyController<ChatMessages> controller;
+  final MainAxisAlignment Function(bool isFromMe) messageAlignment;
   final Future<Response> Function(BuildContext context, int currentPage) asyncCall;
   final PagifyData<ChatMessages> Function(Response response) mapper;
   final PagifyErrorMapper errorMapper;
@@ -32,6 +33,7 @@ class EasyChat<Response> extends StatelessWidget {
     required this.errorMapper,
     required this.rightMessageBuilder,
     required this.leftMessageBuilder,
+    required this.messageAlignment,
     this.errorBuilder,
     this.loadingBuilder,
     this.cacheExtent,
@@ -48,6 +50,7 @@ class EasyChat<Response> extends StatelessWidget {
   Widget build(BuildContext context) {
     return ChatBody<Response>(
       noConnectionText: noConnectionText,
+      messageAlignment: messageAlignment,
       emptyView: emptyView,
       onLoading: onLoading,
       onError: onError,

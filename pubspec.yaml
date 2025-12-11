@@ -16,7 +16,8 @@ dependencies:
 #  path: ^1.9.1
 #  connectivity_plus: ^6.1.1
 
-  pagify: ^0.2.8
+  pagify:
+    path: /Users/aaita/Desktop/apps/pagination_helper
 
   flutter:
     sdk: flutter

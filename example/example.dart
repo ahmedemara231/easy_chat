@@ -73,6 +73,7 @@ class Example extends StatelessWidget {
                   perPage: 10, totalPages: 3
               )
           ),
+          messageAlignment: (fromMe) => MainAxisAlignment.end,
           errorMapper: PagifyErrorMapper(errorWhenDio: (e) => e.response?.data['error']),
           rightMessageBuilder: _buildMessage,
           leftMessageBuilder: _buildMessage,

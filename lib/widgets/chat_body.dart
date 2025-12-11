@@ -7,6 +7,7 @@ import '../models/chat_message.dart';
 import 'message_widget.dart';
 
 class ChatBody<Response> extends StatelessWidget {
+  final MainAxisAlignment Function(bool isFromMe) messageAlignment;
   final PagifyController<ChatMessages> controller;
   final Future<Response> Function(BuildContext context, int currentPage) asyncCall;
   final PagifyData<ChatMessages> Function(Response response) mapper;
@@ -31,6 +32,7 @@ class ChatBody<Response> extends StatelessWidget {
     required this.errorMapper,
     required this.rightMessageBuilder,
     required this.leftMessageBuilder,
+    required this.messageAlignment,
     this.onLoading,
     this.onError,
     this.onSuccess,
@@ -64,8 +66,9 @@ class ChatBody<Response> extends StatelessWidget {
       errorMapper: errorMapper,
       errorBuilder: errorBuilder,
       itemBuilder: (context, data, index, element) => Row(
-        mainAxisAlignment: element.sender.isFromMe?
-        MainAxisAlignment.start : MainAxisAlignment.end,
+        // mainAxisAlignment: element.sender.isFromMe?
+        // MainAxisAlignment.start : MainAxisAlignment.end,
+        mainAxisAlignment: messageAlignment(element.sender.isFromMe),
         children: [
           MessageWidget(
             message: element,
